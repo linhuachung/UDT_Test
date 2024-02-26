@@ -1,0 +1,23 @@
+
+title Solution Architecture for CI/CD and Environment Isolation
+
+Development {
+  Dev Database [icon: aws-dynamodb]
+}
+Production {
+  Prod Database [icon: aws-dynamodb]
+}
+CI CD Tools {
+  Gitlab CI [icon: gitlab]
+  Github Action [icon: github]
+}
+Deployment Target {
+  Heroku [icon: heroku]
+}
+
+Gitlab CI > Development
+Gitlab CI > Production
+Github Action > Development
+Github Action > Production
+Development > Heroku
+Production > Heroku

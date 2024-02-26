@@ -1,0 +1,65 @@
+
+title Authentication and Authorization Flow
+
+User [icon: user] > Auth Service [icon: lock]: Request login
+activate User
+Auth Service > Database [icon: database]: Validate credentials
+alt [label: if credentials valid] {
+    Auth Service > User: Login success & auth token
+    activate Auth Service
+    User > User: Store auth state
+    deactivate User
+    loop [label: until logout] {
+        User > Auth Service: Request resource access
+        alt [label: if token valid] {
+            Auth Service > Resource Service [icon: server]: Check permissions
+            opt [label: if Customer] {
+                Resource Service > Database: Read Customer data
+                Resource Service > User: Customer data
+            }
+            opt [label: if Agency] {
+                Resource Service > Database: CRUD Agency data
+                Resource Service > User: Agency data response
+            }
+            opt [label: if Admin] {
+                Resource Service > Database: Read all data
+                Resource Service > User: Admin data response
+            }
+        }
+        else [label: if token invalid] {
+            Auth Service > User: Request re-authentication
+            break
+        }
+    }
+    User > Auth Service: Request logout
+    Auth Service > User: Logout success
+    deactivate Auth Service
+}
+else [label: if credentials invalid] {
+    Auth Service > User: Login failure
+    deactivate User
+}
+
+
+
+2.
+
+    * Strong Points:
+    1. Clarity: The sequence diagram effectively illustrates the flow of actions between actors and the authentication system.
+    2. Role-based Authorization: It clearly shows the different actions each type of user (Customer, Agency, Admin) can take and how they are authorized.
+    3. Interaction: It demonstrates the interaction between the actors and the authentication system, highlighting the authentication and authorization processes.
+    4. Security Awareness: It emphasizes the importance of authorization and access control in the system.
+
+    * Weak Points:
+    1. Simplicity: The sequence diagram lacks details regarding the specific authentication mechanisms used (e.g., username/password, tokens, etc.).
+    2. Scope: It focuses solely on authentication and authorization, excluding other aspects such as session management, encryption, etc.
+    3. Dynamic Behavior: It doesn't capture dynamic scenarios such as authentication failures, session timeouts, or concurrent user interactions.
+    4. Error Handling: Error handling and exceptional cases (e.g., unauthorized access attempts) are not addressed.
+
+    * Improvements:
+    1. Detailed Authentication Process: Provide a more detailed depiction of the authentication process, including specific mechanisms and protocols used (e.g., OAuth, JWT).
+    2. Include Error Handling: Add error handling scenarios to illustrate how the system handles authentication failures, unauthorized access attempts, etc.
+    3. Expand Scope: Consider expanding the diagram to include other security-related processes such as session management, data encryption, and secure communication protocols.
+    4. Dynamic Scenarios: Incorporate dynamic scenarios to show how the system reacts to changes in user behavior, such as session expiration or concurrent access.
+    5. Feedback Loops: Add feedback loops to indicate actions taken based on the outcome of authentication and authorization checks.
+
